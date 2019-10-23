@@ -81,10 +81,8 @@ public class Banque {
   // Recherche du compte d'un client, ou null si pas trouvé
   public CompteBancaire recherche(String nom)   {
 	  CompteBancaire temp;
-	  String titu;
-	  for(int i = 0; i < clients.length; i++) {
-		  titu = (clients[i].renvoyerTitulaire());
-		  if (titu.equals(nom)) {
+	  for(int i = 0; i < nombreClients; i++) {
+		  if (clients[i].renvoyerTitulaire().equals(nom)) {
 			  temp = clients[i]; 
 			  return temp;
 		  }
@@ -116,23 +114,32 @@ public class Banque {
 	    }
 	  else {
 	    	CompteBancaire cbTemp = this.recherche(nom);
+	    	double soldeInit = cbTemp.renvoyerSolde();
 	    	cbTemp.retirer(montant);
-	    	return true;
+	    	if (soldeInit == cbTemp.renvoyerSolde()) {
+	    		return false;
+	    	}
+	    	else {
+	    		return true;
+	    	}
 	  }
   }
 
   // Virement entre deux clients (si possible)
   //  retourne vrai si l'opération a pu être effectuée
-  public boolean vire(String debite, String credite, double montant) {
-	  if () {
-		  
+	
+	
+	  public boolean vire(String debite, String credite, double montant) { if
+	  (this.recherche(debite) ) {
+	  
 	  }
-    // ######################################
-    // ##########" A COMPLETER ##############
-    // ######################################
-    return false;
-  }
-  
+	  
+	  // ###################################### 
+	  // ##########" A COMPLETER############## 
+	  // ######################################
+	  
+	  return false; }
+	 
   // ----------------------------------------------------------------
   // LE PROGRAMME PRINCIPAL (se contente ici de tester les methodes)
   // ----------------------------------------------------------------
