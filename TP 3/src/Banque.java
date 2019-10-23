@@ -129,17 +129,53 @@ public class Banque {
   //  retourne vrai si l'opération a pu être effectuée
 	
 	
-	  public boolean vire(String debite, String credite, double montant) { if
-	  (this.recherche(debite) ) {
-	  
+public boolean vire(String debite, String credite, double montant) { 
+	  if(this.recherche(debite) == null || this.recherche(credite) == null ) {
+	 	 return false;
+	  }
+	  else {
+		  CompteBancaire cbTemp = this.recherche(credite);
+	      double soldeInit = cbTemp.renvoyerSolde();
+	      cbTemp.virement(this.recherche(debite) , montant);
+	      if (soldeInit == cbTemp.renvoyerSolde()) {
+	    		return false;
+	    	}
+	    	else {
+	    		return true;
+	    	}
 	  }
 	  
 	  // ###################################### 
 	  // ##########" A COMPLETER############## 
 	  // ######################################
 	  
-	  return false; }
-	 
+}
+
+public void fermeture(String nom) {
+	int position = 0;
+	if (this.recherche(nom) == null) {
+	}
+	else {
+		for (int i = 0; i < nombreClients; i++) {
+			if (clients[i].renvoyerTitulaire().equals(nom)) {
+				position = i;
+			}
+		}
+		for (int k = position; k < nombreClients; k++) {
+			clients[k] = clients[k+1];
+		}
+		clients[position] = null;
+		nombreClients = nombreClients - 1;
+	}
+}
+
+public double calculeEncoursTotal() {
+	double somme = 0;
+	for (int i = 0; i < nombreClients; i++) {
+		somme = somme + clients[i].renvoyerSolde();
+		}
+	return somme;
+}
   // ----------------------------------------------------------------
   // LE PROGRAMME PRINCIPAL (se contente ici de tester les methodes)
   // ----------------------------------------------------------------
@@ -148,7 +184,8 @@ public class Banque {
     Scanner sc = new Scanner(System.in);
     String nomTitulaire; // pour les saisies ci-dessous
     double montant; // pour les saisies ci-dessous
-
+    String nomDebite;
+    String nomCredite;
     Banque lyonnais = new Banque("Credit Lyonnais");
     
     // quelques clients de la banque
@@ -161,7 +198,7 @@ public class Banque {
       // affiche un menu minimal
       System.out.println();
       System.out.println("### GESTION DE LA BANQUE");
-      System.out.print("(i)nfos (a)joute (c)onsulte (d)epose (r)etire (v)ire (q)uitte: ");      
+      System.out.print("(i)nfos (a)joute (c)onsulte (d)epose (r)etire (v)ire (q)uitte (f)ermeture (e)n cours total: ");      
       char choix=sc.next().charAt(0);
       sc.nextLine(); // Pour sauter le passage à la ligne tapé par l'utilisateur
                      // (important pour que les prochains nextLine() fonctionnent)
@@ -208,18 +245,32 @@ public class Banque {
         System.out.println("retrait: " + lyonnais.retire(nomTitulaire, montant));
         break;
       case 'v': // VIRE entre deux comptes
+    	System.out.print("nom credite: ");
+        nomCredite = sc.nextLine();
+        System.out.print("nom debite: ");
+        nomDebite = sc.nextLine();
+        System.out.print("montant: ");
+        montant = sc.nextDouble();
+        System.out.println("retrait: " + lyonnais.vire(nomDebite, nomCredite, montant));
         // ######################################
         // ##########" A COMPLETER ##############
         // ######################################
         break;
 
-        // FERMETURE DE COMPTE
-        // ######################################
+      case 'f': // FERMETURE DE COMPTE
+    	System.out.print("nom : ");
+    	nomTitulaire = sc.nextLine();
+    	lyonnais.fermeture(nomTitulaire);
+        System.out.println("Le compte est fermé");
+        break;
+    	// ######################################
         // ##########" A COMPLETER ##############
         // ######################################
 
-        // EN-COURS TOTAL
-        // ######################################
+      case 'e':// EN-COURS TOTAL
+        System.out.println("En cours total " + lyonnais.calculeEncoursTotal());
+        break;
+    	// ######################################
         // ##########" A COMPLETER ##############
         // ######################################
       
